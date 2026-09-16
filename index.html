@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern GPS Tracker - ESP32</title>
+    <!-- Tailwind CSS untuk Styling Modern -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet JS untuk Maps Gratis Tanpa API Key -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Firebase App dan Database -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <style>
+        #map { height: 480px; width: 100%; border-radius: 1rem; z-index: 1; }
+        .bg-gradient-soft {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- NAVBAR: Desain Modern Minimalis Hijau & Putih -->
+    <nav class="bg-white border-b border-green-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 shadow-sm text-xl">
+                        🗺️
+                    </div>
+                    <div>
+                        <span class="text-lg font-bold text-slate-900 tracking-tight">Navix<span class="text-green-600">Tracker</span></span>
+                        <p class="text-xs text-slate-400 font-medium">Real-time ESP32 & GPS</p>
+                    </div>
+                </div>
+                <!-- Menu Desktop -->
+                <div class="hidden sm:flex space-x-2">
+                    <a href="#" class="bg-green-50 text-green-700 px-4 h-9 rounded-full text-sm font-medium inline-flex items-center shadow-sm">Dashboard</a>
+                    <a href="#team-section" class="text-slate-500 hover:text-green-600 hover:bg-green-50/50 px-4 h-9 rounded-full text-sm font-medium inline-flex items-center transition">Team</a>
+                    <a href="#" class="text-slate-500 hover:text-green-600 hover:bg-green-50/50 px-4 h-9 rounded-full text-sm font-medium inline-flex items-center transition">Riwayat</a>
+                    <a href="#" class="text-slate-500 hover:text-green-600 hover:bg-green-50/50 px-4 h-9 rounded-full text-sm font-medium inline-flex items-center transition">Pengaturan</a>
+                </div>
+                <!-- Tombol Menu Mobile -->
+                <div class="flex sm:hidden">
+                    <button id="mobile-menu-btn" class="text-slate-500 hover:text-green-600 focus:outline-none p-2 rounded-lg hover:bg-slate-100">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Menu Dropdown Mobile -->
+        <div id="mobile-menu" class="hidden sm:hidden border-b border-slate-100 bg-white px-4 pt-2 pb-4 space-y-1 shadow-inner">
+            <a href="#" class="block bg-green-50 text-green-700 px-4 py-2 rounded-xl text-sm font-medium">Dashboard</a>
+            <a href="#team-section" id="mobile-team-link" class="block text-slate-500 hover:bg-slate-50 hover:text-green-600 px-4 py-2 rounded-xl text-sm font-medium">Team</a>
+            <a href="#" class="block text-slate-500 hover:bg-slate-50 hover:text-green-600 px-4 py-2 rounded-xl text-sm font-medium">Riwayat</a>
+            <a href="#" class="block text-slate-500 hover:bg-slate-50 hover:text-green-600 px-4 py-2 rounded-xl text-sm font-medium">Pengaturan</a>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- KOLOM KIRI: Informasi Data & Status Alat -->
+        <div class="space-y-6 lg:col-span-1">
+            
+            <!-- KARTU DATA REAL-TIME -->
+            <div class="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm space-y-5">
+                <div class="flex items-center justify-between border-b border-slate-50 pb-4">
+                    <h2 class="font-bold text-slate-900 flex items-center gap-2">
+                        <span class="text-green-500">⚡</span> Informasi Real-time
+                    </h2>
+                    <span id="connection-status" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100 transition-colors duration-300">
+                        Menghubungkan...
+                    </span>
+                </div>
+
+                <!-- Latitude Card -->
+                <div class="bg-gradient-soft border border-green-50 p-4 rounded-xl">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Latitude</span>
+                    <div id="latitude" class="text-xl font-bold text-slate-800 font-mono tracking-tight">-</div>
+                </div>
+
+                <!-- Longitude Card -->
+                <div class="bg-gradient-soft border border-green-50 p-4 rounded-xl">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Longitude</span>
+                    <div id="longitude" class="text-xl font-bold text-slate-800 font-mono tracking-tight">-</div>
+                </div>
+
+                <!-- Update Terakhir Card -->
+                <div class="bg-slate-50 border border-slate-100 p-4 rounded-xl">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Terakhir Diperbarui</span>
+                    <div id="timestamp" class="text-sm font-semibold text-slate-600">-</div>
+                </div>
+            </div>
+
+            <!-- KARTU STATUS SISTEM -->
+            <div class="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm space-y-3">
+                <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                    <span class="text-green-500">✅</span> Status Alat
+                </h3>
+                <p class="text-sm text-slate-500 leading-relaxed">
+                    ESP32 dan Ublox NEO 6M mengirimkan pembaruan koordinat secara berkala melalui Firebase Realtime Database.
+                </p>
+                <div class="pt-2 border-t border-slate-50 flex items-center gap-2 text-xs text-slate-400 font-medium">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Sistem Berjalan Normal
+                </div>
+            </div>
+
+        </div>
+
+        <!-- KOLOM KANAN: Peta Live Interaktif -->
+        <div class="lg:col-span-2 flex flex-col">
+            <div class="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm flex-1 flex flex-col min-h-[480px]">
+                <div class="flex justify-between items-center mb-4 px-2">
+                    <h2 class="font-bold text-slate-900 flex items-center gap-2">
+                        <span class="text-green-500">🗺️</span> Peta Lokasi
+                    </h2>
+                    <span class="text-xs bg-slate-100 text-slate-500 px-3 py-1 rounded-full font-medium">Leaflet OSM</span>
+                </div>
+                <!-- Container Map -->
+                <div class="flex-1 bg-slate-50 rounded-xl overflow-hidden border border-slate-100 relative shadow-inner">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-100 py-4 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400 font-medium">
+            &copy; 2026 GeoTracker Dashboard. Dibuat dengan Tailwind CSS & Leaflet JS.
+        </div>
+    </footer>
+
+    <script>
+        // Toggle Menu Mobile
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileTeamLink = document.getElementById('mobile-team-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileTeamLink.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
+
+        // ==========================================
+        // 1. KONFIGURASI FIREBASE (WAJIB DISESUAIKAN)
+        // ==========================================
+       const firebaseConfig = {
+  apiKey: "AIzaSyB5riZD9OxYN0vQEIgEANxWznp_WzSawb8",
+  authDomain: "fixselesai-fde60.firebaseapp.com",
+  databaseURL: "https://fixselesai-fde60-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "fixselesai-fde60",
+      storageBucket: "fixselesai-fde60.firebasestorage.app",
+         messagingSenderId: "666302669881",
+        appId: "1:666302669881:web:b65fdba496c55d015199e8"
+        };
+
+        // Inisialisasi Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // ==========================================
+        // 2. INISIALISASI MAPS INTERAKTIF (LEAFLET JS)
+        // ==========================================
+        const defaultLat = -7.73919;
+        const defaultLng = 112.1429;
+        
+        const map = L.map('map').setView([defaultLat, defaultLng], 15);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker = L.marker([defaultLat, defaultLng]).addTo(map)
+            .bindPopup('<b>Lokasi Alat Saat Ini</b>')
+            .openPopup();
+
+        // ==========================================
+        // 3. PENGAMBILAN DATA REAL-TIME DARI FIREBASE
+        // ==========================================
+        database.ref('tracker').on('value', (snapshot) => {
+            const data = snapshot.val();
+            const statusBadge = document.getElementById('connection-status');
+            
+            if (data && data.lat && data.lng) {
+                const lat = parseFloat(data.lat);
+                const lng = parseFloat(data.lng);
+
+                document.getElementById('latitude').innerText = lat;
+                document.getElementById('longitude').innerText = lng;
+                
+                statusBadge.innerText = "Terhubung";
+                statusBadge.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100";
+
+                const waktuSekarang = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + " WIB";
+                document.getElementById('timestamp').innerText = waktuSekarang;
+
+                marker.setLatLng([lat, lng]);
+                map.panTo([lat, lng]);
+            } else {
+                statusBadge.innerText = "Data Kosong";
+                statusBadge.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100";
+            }
+        }, (error) => {
+            console.error("Firebase Error: ", error);
+            const statusBadge = document.getElementById('connection-status');
+            statusBadge.innerText = "Error Koneksi";
+            statusBadge.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100";
+        });
+    </script>
+</body>
+</html>
