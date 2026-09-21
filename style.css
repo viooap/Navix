@@ -1,0 +1,221 @@
+/* --- PENGATURAN DASAR --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f7f9fa; /* Latar abu-abu tipis seperti di gambar */
+    color: #333333;
+}
+
+/* --- TAMPILAN NAVBAR DESTOP / LAPTOP --- */
+.navbar-container {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 8%;
+    border-bottom: 1px solid #eef2f5;
+    position: relative;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-box {
+    background-color: #0b9474; /* Hijau ciri khas Navix */
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+.brand-text h1 {
+    font-size: 18px;
+    color: #1a2b3c;
+}
+
+.brand-text p {
+    font-size: 11px;
+    color: #8a99a8;
+}
+
+.nav-menu ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+
+.nav-menu ul li a {
+    text-decoration: none;
+    color: #7d8b99;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+/* Kotak hijau pada menu aktif sesuai gambar kamu */
+.nav-menu ul li a.active, 
+.nav-menu ul li a:hover {
+    color: #0b9474;
+    border: 1px solid #0b9474;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+/* Sembunyikan tombol hamburger secara default di laptop */
+.hamburger-toggle {
+    display: none;
+    font-size: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+}
+
+/* --- TAMPILAN KARTU KONTEN --- */
+.main-content {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.content-card {
+    background-color: #ffffff;
+    max-width: 900px;
+    width: 100%;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    border-bottom: 1px solid #f0f4f7;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+
+.icon-doc {
+    font-size: 24px;
+    color: #f39c12;
+}
+
+.card-header h2 {
+    font-size: 22px;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #95a5a6;
+}
+
+.content-body h3 {
+    font-size: 15px;
+    color: #0b9474;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.content-body p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555555;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.spec-list {
+    list-style: none;
+    margin-top: 10px;
+}
+
+.spec-list li {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555555;
+    margin-bottom: 12px;
+    position: relative;
+    padding-left: 15px;
+}
+
+.spec-list li::before {
+    content: "•";
+    color: #0b9474;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+/* --- PENGATURAN KHUSUS LAYAR ANDROID / HP (RESPONSIF) --- */
+@media screen and (max-width: 768px) {
+    .navbar-container {
+        padding: 15px 5%; /* Perkecil padding di HP */
+    }
+
+    .hamburger-toggle {
+        display: block; /* Tampilkan tombol menu garis tiga */
+    }
+
+    .nav-menu {
+        display: none; /* Sembunyikan menu deret ke samping */
+        position: absolute;
+        top: 100%; /* Pas di bawah navbar */
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.05);
+        padding: 15px 0;
+        z-index: 1000;
+        border-top: 1px solid #f0f4f7;
+    }
+
+    /* Class ini akan aktif ketika tombol hamburger dipencet di HP */
+    .nav-menu.aktif {
+        display: block; 
+    }
+
+    .nav-menu ul {
+        flex-direction: column; /* Menu disusun berderet ke bawah */
+        gap: 0;
+    }
+
+    .nav-menu ul li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-menu ul li a {
+        display: block;
+        padding: 12px 0;
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .nav-menu ul li a.active, 
+    .nav-menu ul li a:hover {
+        border: none; /* Hapus kotak border di HP agar lebih bersih */
+        background-color: #f7f9fa;
+        color: #0b9474;
+        padding: 12px 0;
+        border-radius: 0;
+    }
+
+    .content-card {
+        padding: 20px; /* Perkecil padding kartu di HP agar tidak sempit */
+    }
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navix Tracker</title>
+    <!-- Hubungkan ke file CSS luar -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header & Navigasi -->
+    <header class="navbar-container">
+        <div class="logo-area">
+            <div class="logo-box">N</div>
+            <div class="brand-text">
+                <h1>Navix</h1>
+                <p>Real-time ESP32 & GPS</p>
+            </div>
+        </div>
+        
+        <!-- Tombol Tiga Garis (Hanya muncul di Android/HP) -->
+        <button class="hamburger-toggle" id="hamburger-btn">☰</button>
+
+        <!-- Menu Navigasi -->
+        <nav class="nav-menu" id="nav-menu">
+            <ul>
+                <li><a href="/Navix/" class="active">Utama</a></li>
+                <li><a href="/Navix/team/">Team</a></li>
+                <li><a href="/Navix/riwayat/">Riwayat</a></li>
+                <li><a href="/Navix/pengaturan/">Pengaturan</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Konten Utama (Card) -->
+    <main class="main-content">
+        <article class="content-card">
+            
+            <header class="card-header">
+                <span class="icon-doc">📄</span>
+                <div>
+                    <h2>Deskripsi & Analisis Sistem Pelacak</h2>
+                    <p class="subtitle">Dokumentasi operasional integrasi mikrokontroler dengan cloud database</p>
+                </div>
+            </header>
+
+            <section class="content-body">
+                <h3>Cara Kerja Perangkat</h3>
+                <p>NavixTracker memanfaatkan mikrokontroler <strong>ESP32</strong> sebagai otak utama yang terhubung dengan modul <strong>GPS Ublox NEO 6M</strong>. Modul GPS menangkap sinyal satelit secara periodik untuk mendapatkan koordinat bumi presisi tinggi (garis lintang dan garis bujur).</p>
+
+                <h3>Arsitektur Komunikasi Data</h3>
+                <p>Setelah koordinat berhasil didapatkan dan divalidasi oleh ESP32, data dibungkus dalam format JSON lalu dikirimkan secara nirkabel memanfaatkan modul Wi-Fi internal mengarah ke <strong>Firebase Realtime Database</strong>. Proses pengiriman dirancang dengan latensi rendah untuk memastikan pemantauan posisi aset terjadi secara seketika ("real-time").</p>
+
+                <h3>Spesifikasi Perangkat Keras</h3>
+                <ul class="spec-list">
+                    <li><strong>ESP32 Development Board:</strong> Sebagai unit pemroses dan pengirim data via Wi-Fi.</li>
+                    <li><strong>Ublox NEO 6M GPS Modul:</strong> Sensor pembaca titik koordinat satelit bumi.</li>
+                    <li><strong>GPRS SIM800L:</strong> memberikan kemampuan komunikasi seluler berbasis jaringan 2G kepada perangkat mikrokontroler (seperti Arduino, ESP32, atau Raspberry Pi).</li>
+                    <li><strong>Sistem Catu Daya:</strong> Regulasi daya konstan untuk kestabilan sensor antena GPS.</li>
+                </ul>
+            </section>
+
+        </article>
+    </main>
+
+    <!-- Hubungkan ke file JavaScript luar -->
+    <script src="script.js"></script>
+</body>
+</html>

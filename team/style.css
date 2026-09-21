@@ -1,0 +1,265 @@
+/* Variabel Warna & Font */
+:root {
+    --primary-green: #10b981;      /* Hijau Utama */
+    --dark-green: #047857;         /* Hijau Gelap */
+    --light-green: #ecfdf5;        /* Background Ringan */
+    --pure-white: #ffffff;
+    --text-dark: #1f2937;
+    --text-muted: #6b7280;
+    --text-nav-inactive: #9ca3af;  /* Abu-abu pudar untuk menu non-aktif */
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.03);
+    --shadow-hover: 0 30px 60px rgba(16, 185, 129, 0.15);
+}
+
+/* Reset Dasar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background-color: #f8fafc; /* Latar belakang abu-abu terang bersih */
+    min-height: 100vh;
+    padding-top: 100px; /* Jarak agar konten tidak tertutup navbar fixed */
+}
+
+/* ==========================================================================
+   STYLE NAVBAR (Sesuai Gambar User)
+   ========================================================================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--pure-white);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.02);
+    z-index: 1000;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.nav-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Sisi Kiri: Branding */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.brand-name {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.brand-name span {
+    color: var(--primary-green);
+}
+
+.brand-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Sisi Kanan: Menu List */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 15px;
+}
+
+.nav-link {
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-nav-inactive);
+    padding: 8px 24px;
+    border-radius: 30px; /* Bentuk Ellipse sempurna */
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+/* Kondisi menu tidak aktif saat diarahkan mouse */
+.nav-link:hover:not(.active) {
+    color: var(--text-dark);
+    background-color: #f8fafc;
+}
+
+/* Kondisi Menu 'Team' Yang Sedang Aktif Berdasarkan Gambar */
+.nav-link.active {
+    color: #475569;
+    border: 1.5px solid #0f172a; /* Garis tepi hitam elips */
+    background-color: transparent;
+    font-weight: 600;
+}
+
+/* Jika Anda ingin menu 'Utama' memiliki background hijau muda seperti gambar */
+.nav-menu li:first-child .nav-link {
+    background-color: #e6fcf5;
+    color: var(--primary-green);
+    font-weight: 600;
+}
+
+
+/* ==========================================================================
+   STYLE CONTENT TEAM (Hijau & Putih)
+   ========================================================================== */
+.team-section {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+.header-container {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.sub-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--primary-green);
+    font-weight: 700;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: var(--text-dark);
+    margin-top: 5px;
+    font-weight: 700;
+}
+
+.title-line {
+    width: 50px;
+    height: 4px;
+    background: var(--primary-green);
+    margin: 12px auto 0;
+    border-radius: 2px;
+}
+
+.team-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+.profile-card {
+    background: var(--pure-white);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(16, 185, 129, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.profile-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--primary-green);
+}
+
+.image-wrapper {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    background: #f1f5f9;
+}
+
+.image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.profile-card:hover .image-wrapper img {
+    transform: scale(1.06);
+}
+
+.card-content {
+    padding: 25px 20px;
+    text-align: center;
+}
+
+.member-name {
+    font-size: 1.3rem;
+    color: var(--text-dark);
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.profile-card:hover .member-name {
+    color: var(--dark-green);
+}
+
+.member-role {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.social-icon {
+    width: 42px;
+    height: 42px;
+    background-color: var(--light-green);
+    color: var(--dark-green);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background-color: var(--primary-green);
+    color: var(--pure-white);
+    transform: translateY(-3px);
+}
+
+/* Responsif Mobile */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    body {
+        padding-top: 140px;
+    }
+    .nav-menu {
+        gap: 5px;
+    }
+    .nav-link {
+        padding: 6px 14px;
+        font-size: 0.85rem;
+    }
+}
